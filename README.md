@@ -2,6 +2,8 @@
 
 Minimalist web study for the **AI Use Construal & Consequences Scale** wide pilot. Participants are randomly assigned to one of 36 between-subjects cells: 6 scenarios × 3 means (AI / human expert / alone) × 2 perspectives (self / other).
 
+After the vignette appears, a 30-second guided-imagination period must elapse before participants can continue. During measurement, the vignette remains visible in a sticky left-hand panel on desktop, while one construct block at a time appears on the right. Item order is freshly randomised within each block for every participant; blocks retain the A–K protocol order without displaying their construct names.
+
 ## Before collecting data
 
 1. Replace the highlighted researcher notice in `index.html` with the ethics-approved participant information.

@@ -1,4 +1,4 @@
-:root{--ink:#0a0a0a;--paper:#fff;--muted:#666;--line:#d8d8d8;--soft:#f4f4f2;--danger:#b00020;--max:920px}
+:root{--ink:#0a0a0a;--paper:#fff;--muted:#666;--line:#d8d8d8;--soft:#f4f4f2;--danger:#b00020;--max:1180px}
 *{box-sizing:border-box}
 html{background:var(--paper);color:var(--ink);font-family:Arial,Helvetica,sans-serif;font-size:16px}
 body{margin:0;min-height:100vh;display:flex;flex-direction:column}
@@ -30,6 +30,16 @@ h2{font-size:26px;line-height:1.2;letter-spacing:-.03em;font-weight:500;margin:3
 .field input,.field select{border:1px solid var(--ink);border-radius:0;background:var(--paper);padding:13px;min-height:48px}
 .hint{font-size:12px;color:var(--muted);line-height:1.4}
 .vignette{border:1px solid var(--ink);padding:clamp(28px,6vw,64px);margin:32px 0;font-size:clamp(23px,3.4vw,34px);line-height:1.42;letter-spacing:-.025em}
+.vignette.deliberating{animation:breathe 3s ease-in-out infinite}
+@keyframes breathe{0%,100%{box-shadow:0 0 0 0 rgba(0,0,0,0)}50%{box-shadow:0 0 0 7px rgba(0,0,0,.055)}}
+.deliberation-guide{display:grid;grid-template-columns:1fr auto;gap:28px;align-items:start;margin-top:24px}
+.countdown{font:600 30px/1 "Courier New",monospace;min-width:86px;text-align:right}
+.study-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:clamp(42px,7vw,92px);align-items:start}
+.scenario-rail{position:sticky;top:105px}
+.scenario-rail .vignette{font-size:clamp(19px,2.1vw,27px);padding:clamp(24px,3.5vw,40px);margin:18px 0}
+.scenario-label{font:600 10px/1.4 "Courier New",monospace;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.section-pane h1{font-size:clamp(34px,4.8vw,58px)}
+.section-position{font:400 12px/1.4 "Courier New",monospace;color:var(--muted);margin-top:8px}
 .instruction{color:var(--muted);line-height:1.6;max-width:720px}
 .item-list{margin-top:36px;border-top:1px solid var(--ink)}
 .question{padding:30px 0;border-bottom:1px solid var(--line)}
@@ -42,6 +52,7 @@ h2{font-size:26px;line-height:1.2;letter-spacing:-.03em;font-weight:500;margin:3
 .error-summary{border:1px solid var(--danger);color:var(--danger);padding:14px;margin-top:24px;line-height:1.5}
 .status-card{text-align:center;padding:72px 0}.status-mark{font:400 72px "Courier New",monospace;margin-bottom:20px}
 .noscript{padding:20px;background:var(--danger);color:white;text-align:center}
-@media(max-width:640px){.site-header{padding:18px 20px}.study-meta span:first-child{display:none}.shell{margin-top:48px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.scale{gap:3px}.scale input{height:38px}.site-footer{padding:20px;gap:16px}.site-footer span:last-child{display:none}.actions{flex-direction:column-reverse}.button{width:100%}}
-@media(prefers-reduced-motion:reduce){.panel{animation:none}}
+@media(max-width:800px){.study-layout{grid-template-columns:1fr;gap:34px}.scenario-rail{position:static}.scenario-rail .vignette{font-size:18px;padding:22px}.scenario-rail .instruction{display:none}}
+@media(max-width:640px){.site-header{padding:18px 20px}.study-meta span:first-child{display:none}.shell{margin-top:48px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.scale{gap:3px}.scale input{height:38px}.site-footer{padding:20px;gap:16px}.site-footer span:last-child{display:none}.actions{flex-direction:column-reverse}.button{width:100%}.deliberation-guide{grid-template-columns:1fr}.countdown{text-align:left}}
+@media(prefers-reduced-motion:reduce){.panel,.vignette.deliberating{animation:none}}
 *:focus-visible{outline:3px solid #777;outline-offset:3px}
