@@ -7,12 +7,14 @@ After the vignette appears, a 30-second guided-imagination period must elapse be
 ## Before collecting data
 
 1. Confirm that the consent and debriefing text in `index.html` matches the final ethics-approved participant information and add a researcher email address if required.
-2. Create a private Google Sheet and import `data/sheet-headers.csv` into its first row. Rename the tab `responses`.
-3. In the Sheet choose **Extensions → Apps Script**, paste `google-apps-script/Code.gs`, save, and deploy it as a Web app:
+2. Create a private Google Sheet. In the Sheet choose **Extensions → Apps Script** and paste `google-apps-script/Code.gs`.
+3. Select `setupSheet` in the function menu and click **Run** once. Approve the requested spreadsheet permission. The script creates the `responses` tab and all columns automatically.
+4. Choose **Deploy → New deployment → Web app**:
    - Execute as: **Me**
    - Who has access: **Anyone**
-4. Copy the deployment URL ending in `/exec` and paste it into `CONFIG.endpoint` near the top of `app.js`.
-5. Test with dummy responses and confirm that one complete row appears in the Sheet.
+5. Copy the deployment URL ending in `/exec` and paste it into `CONFIG.endpoint` near the top of `app.js`.
+6. Open the deployment URL in a browser. It should show `{"ok":true,...}`.
+7. Test the study with dummy responses and confirm that one complete row appears in the Sheet.
 
 The spreadsheet must remain private. Never place Google credentials, tokens, participant names, or email addresses in this repository.
 

@@ -1,4 +1,44 @@
 const SHEET_NAME = 'responses';
+const HEADERS = [
+  'participant_id','study_version','started_at','completed_at','server_received_at',
+  'scenario','means','perspective','age','gender','education','employment','country','native_language',
+  'A01','A02','A03','A04','A05_R','A06_R',
+  'B01','B02','B03','B04','B05_R',
+  'C01','C02','C03','C04_R','C05_R',
+  'D01','D02','D03','D04_R',
+  'E01','E02','E03','E04_R',
+  'F01','F02','F03','F04_R',
+  'G01','G02','G03','G04_R','G05_R','G06_R',
+  'H01','H02','H03_R','H04_R','H05_R',
+  'I01','I02','I03','I04_R','I05_R',
+  'J01','J02','J03','J04',
+  'K01','K02','K03','K04','contribution',
+  'ai_frequency','study_guess','comment','completed'
+];
+
+/** Run once from the Apps Script editor before deploying the web app. */
+function setupSheet() {
+  const workbook = SpreadsheetApp.getActiveSpreadsheet();
+  let sheet = workbook.getSheetByName(SHEET_NAME);
+  if (!sheet) {
+    sheet = workbook.getSheets()[0];
+    sheet.setName(SHEET_NAME);
+  }
+  sheet.clear();
+  sheet.getRange(1, 1, 1, HEADERS.length).setValues([HEADERS]);
+  sheet.setFrozenRows(1);
+  sheet.getRange(1, 1, 1, HEADERS.length).setFontWeight('bold').setBackground('#eeeeee');
+  sheet.getRange('A:A').setNumberFormat('@');
+  sheet.getRange('B:B').setNumberFormat('@');
+  sheet.getRange('C:E').setNumberFormat('yyyy-mm-dd hh:mm:ss');
+  if (sheet.getFilter()) sheet.getFilter().remove();
+  sheet.getRange(1, 1, 1, HEADERS.length).createFilter();
+  return 'AI-UCC response sheet is ready.';
+}
+
+function doGet() {
+  return json({ok:true, service:'AI-UCC data receiver', version:'pilot-1.1'});
+}
 
 function doPost(e) {
   const lock = LockService.getScriptLock();
@@ -7,16 +47,18 @@ function doPost(e) {
     const data = JSON.parse(e.postData.contents);
     if (!data.participant_id || !data.completed_at) throw new Error('Missing required fields');
     const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
-    if (!sheet) throw new Error('Sheet "responses" not found');
+    if (!sheet) throw new Error('Run setupSheet() before collecting data');
     const headers = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+    if (headers.join('|') !== HEADERS.join('|')) throw new Error('Response headers do not match this script version');
     const ids = sheet.getLastRow() > 1 ? sheet.getRange(2, 1, sheet.getLastRow() - 1, 1).getValues().flat() : [];
     if (ids.includes(data.participant_id)) return json({ok:true, duplicate:true});
+    data.server_received_at = new Date();
     sheet.appendRow(headers.map(key => Object.prototype.hasOwnProperty.call(data, key) ? sanitise(data[key]) : ''));
     return json({ok:true});
   } catch (error) {
     return json({ok:false, error:String(error.message || error)});
   } finally {
-    lock.releaseLock();
+    if (lock.hasLock()) lock.releaseLock();
   }
 }
 
