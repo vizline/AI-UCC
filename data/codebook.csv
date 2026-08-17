@@ -1,0 +1,30 @@
+variable,label,type,values_or_range,notes
+participant_id,Random anonymous participant identifier,string,,UUID generated in browser
+study_version,Questionnaire version,string,,pilot-1.0
+started_at,Study start time,string,ISO 8601,
+completed_at,Submission time,string,ISO 8601,
+scenario,Scenario condition,categorical,S1-S6,See study protocol
+means,Means condition,categorical,AI|EXPERT|ALONE,
+perspective,Perspective condition,categorical,SELF|OTHER,
+age,Age in years,numeric,18-100,
+gender,Gender,categorical,,Participant-selected label
+education,Highest completed education,categorical,,Participant-selected label
+employment,Employment status,categorical,,Participant-selected label
+country,Country of residence,string,,Free text
+native_language,First language,string,,Free text
+A01-A06_R,Competence items,numeric,1-7,A05_R and A06_R reverse-keyed; A06_R help-only
+B01-B05_R,Diligence and motivation items,numeric,1-7,B05_R reverse-keyed
+C01-C05_R,Warmth and character items,numeric,1-7,C04_R and C05_R reverse-keyed
+D01-D04_R,Credibility and reliability items,numeric,1-7,D04_R reverse-keyed
+E01-E04_R,Perceived quality items,numeric,1-7,E04_R reverse-keyed
+F01-F04_R,Authenticity items,numeric,1-7,F04_R reverse-keyed
+G01-G06_R,Effort investment items,numeric,1-7,G04_R to G06_R reverse-keyed
+H01-H05_R,Moral acceptability items,numeric,1-7,H03_R to H05_R reverse-keyed
+I01-I05_R,Attributed contribution and ownership items,numeric,1-7,I04_R and I05_R reverse-keyed; help-only
+J01-J04,Inspiration and augmentation construal,numeric,1-7,Help-only
+K01-K04,Outsourcing and replacement construal,numeric,1-7,Help-only
+contribution,Share of contribution attributed to target person,numeric,0-100,Implied remainder attributed to helper; help-only
+ai_frequency,Frequency of generative AI use,categorical,,Measured after outcomes to reduce priming
+study_guess,Participant guess about study purpose,categorical,,Awareness check
+comment,Optional participant comment,string,0-500 characters,
+completed,Completion indicator,numeric,1,Only complete submissions currently transmitted
