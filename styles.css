@@ -51,6 +51,7 @@ h2{font-size:26px;line-height:1.2;letter-spacing:-.03em;font-weight:500;margin:3
 .slider-ends{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);margin:8px 78px 0}
 .error-summary{border:1px solid var(--danger);color:var(--danger);padding:14px;margin-top:24px;line-height:1.5}
 .status-card{text-align:center;padding:72px 0}.status-mark{font:400 72px "Courier New",monospace;margin-bottom:20px}
+.status-card .prose{margin-inline:auto;text-align:center}
 .noscript{padding:20px;background:var(--danger);color:white;text-align:center}
 @media(max-width:800px){.study-layout{grid-template-columns:1fr;gap:34px}.scenario-rail{position:static}.scenario-rail .vignette{font-size:18px;padding:22px}.scenario-rail .instruction{display:none}}
 @media(max-width:640px){.site-header{padding:18px 20px}.study-meta span:first-child{display:none}.shell{margin-top:48px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.scale{gap:3px}.scale input{height:38px}.site-footer{padding:20px;gap:16px}.site-footer span:last-child{display:none}.actions{flex-direction:column-reverse}.button{width:100%}.deliberation-guide{grid-template-columns:1fr}.countdown{text-align:left}}
