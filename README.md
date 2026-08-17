@@ -6,7 +6,7 @@ After the vignette appears, a 30-second guided-imagination period must elapse be
 
 ## Before collecting data
 
-1. Replace the highlighted researcher notice in `index.html` with the ethics-approved participant information.
+1. Confirm that the consent and debriefing text in `index.html` matches the final ethics-approved participant information and add a researcher email address if required.
 2. Create a private Google Sheet and import `data/sheet-headers.csv` into its first row. Rename the tab `responses`.
 3. In the Sheet choose **Extensions → Apps Script**, paste `google-apps-script/Code.gs`, save, and deploy it as a Web app:
    - Execute as: **Me**

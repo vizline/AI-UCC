@@ -7,11 +7,11 @@ scenario,Scenario condition,categorical,S1-S6,See study protocol
 means,Means condition,categorical,AI|EXPERT|ALONE,
 perspective,Perspective condition,categorical,SELF|OTHER,
 age,Age in years,numeric,18-100,
-gender,Gender,categorical,,Participant-selected label
+gender,Gender,categorical,Woman|Man|Other / Prefer not to say,Closed response list
 education,Highest completed education,categorical,,Participant-selected label
 employment,Employment status,categorical,,Participant-selected label
-country,Country of residence,string,,Free text
-native_language,First language,string,,Free text
+country,Country of residence,categorical,United Kingdom|United States|Ireland|Australia|Other,Closed response list
+native_language,First language,categorical,English|Other,Closed response list
 A01-A06_R,Competence items,numeric,1-7,A05_R and A06_R reverse-keyed; A06_R help-only
 B01-B05_R,Diligence and motivation items,numeric,1-7,B05_R reverse-keyed
 C01-C05_R,Warmth and character items,numeric,1-7,C04_R and C05_R reverse-keyed
