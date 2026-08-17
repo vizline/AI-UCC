@@ -1,7 +1,7 @@
 "use strict";
 
 const CONFIG = {
-  endpoint: "", // Paste the deployed Google Apps Script /exec URL here.
+  endpoint: "https://script.google.com/macros/s/AKfycbzzHNR1q8k9ug4JQ1RM3TjrhUF1mB7R7pQFxPVu60XTADpofWPDf3pDMU8hOCWEb8lv/exec",
   studyVersion: "pilot-1.1",
   saveDrafts: true
 };
