@@ -16,6 +16,10 @@ After the vignette appears, a 30-second guided-imagination period must elapse be
 6. Open the deployment URL in a browser. It should show `{"ok":true,...}`.
 7. Test the study with dummy responses and confirm that one complete row appears in the Sheet.
 
+### Updating an existing response sheet
+
+When the questionnaire adds new columns, paste the latest `Code.gs` into Apps Script, select `upgradeSheet`, and click **Run**. This appends missing columns without clearing existing responses. Then edit the existing web-app deployment and deploy a **New version** so the public `/exec` URL uses the updated code.
+
 The spreadsheet must remain private. Never place Google credentials, tokens, participant names, or email addresses in this repository.
 
 ## Local preview

@@ -13,7 +13,11 @@ const HEADERS = [
   'I01','I02','I03','I04_R','I05_R',
   'J01','J02','J03','J04',
   'K01','K02','K03','K04','contribution',
-  'ai_frequency','study_guess','comment','completed'
+  'ai_frequency','study_guess','comment','completed',
+  'time_consent_sec','time_demographics_sec','time_vignette_sec',
+  'time_section_a_sec','time_section_b_sec','time_section_c_sec','time_section_d_sec',
+  'time_section_e_sec','time_section_f_sec','time_section_g_sec','time_section_h_sec',
+  'time_section_i_sec','time_section_j_sec','time_section_k_sec','time_final_sec','time_total_sec'
 ];
 
 /** Run once from the Apps Script editor before deploying the web app. */
@@ -36,8 +40,27 @@ function setupSheet() {
   return 'AI-UCC response sheet is ready.';
 }
 
+/** Safely add new columns after a questionnaire update without deleting responses. */
+function upgradeSheet() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName(SHEET_NAME);
+  if (!sheet) throw new Error('Run setupSheet() first');
+  const existing = sheet.getRange(1, 1, 1, sheet.getLastColumn()).getValues()[0];
+  const expectedPrefix = HEADERS.slice(0, existing.length);
+  if (existing.join('|') !== expectedPrefix.join('|')) {
+    throw new Error('Existing columns are not in the expected order; no changes were made');
+  }
+  const missing = HEADERS.slice(existing.length);
+  if (!missing.length) return 'Sheet is already up to date.';
+  sheet.getRange(1, existing.length + 1, 1, missing.length).setValues([missing]);
+  sheet.getRange(1, existing.length + 1, 1, missing.length).setFontWeight('bold').setBackground('#eeeeee');
+  sheet.getRange(2, existing.length + 1, Math.max(sheet.getMaxRows() - 1, 1), missing.length).setNumberFormat('0.000');
+  if (sheet.getFilter()) sheet.getFilter().remove();
+  sheet.getRange(1, 1, Math.max(sheet.getLastRow(), 1), HEADERS.length).createFilter();
+  return missing.length + ' timing columns added without altering existing responses.';
+}
+
 function doGet() {
-  return json({ok:true, service:'AI-UCC data receiver', version:'pilot-1.1'});
+  return json({ok:true, service:'AI-UCC data receiver', version:'pilot-1.2'});
 }
 
 function doPost(e) {

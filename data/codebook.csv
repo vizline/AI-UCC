@@ -29,3 +29,9 @@ ai_frequency,Frequency of generative AI use,categorical,,Measured after outcomes
 study_guess,Participant guess about study purpose,categorical,,Awareness check
 comment,Optional participant comment,string,0-500 characters,
 completed,Completion indicator,numeric,1,Only complete submissions currently transmitted
+time_consent_sec,Time on consent page,numeric,seconds to 3 decimals,From page display to Begin study
+time_demographics_sec,Time on demographics page,numeric,seconds to 3 decimals,From page display to Continue
+time_vignette_sec,Time on vignette deliberation page,numeric,seconds to 3 decimals,Includes mandatory 30-second interval
+time_section_a_sec-time_section_k_sec,Time on questionnaire section A-K,numeric,seconds to 3 decimals,I-K blank in ALONE condition
+time_final_sec,Time on final questions page,numeric,seconds to 3 decimals,From page display to Submit responses
+time_total_sec,Total procedure time,numeric,seconds to 3 decimals,From initial consent display to final submission
