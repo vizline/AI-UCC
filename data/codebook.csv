@@ -35,3 +35,6 @@ time_vignette_sec,Time on vignette deliberation page,numeric,seconds to 3 decima
 time_section_a_sec-time_section_k_sec,Time on questionnaire section A-K,numeric,seconds to 3 decimals,I-K blank in ALONE condition
 time_final_sec,Time on final questions page,numeric,seconds to 3 decimals,From page display to Submit responses
 time_total_sec,Total procedure time,numeric,seconds to 3 decimals,From initial consent display to final submission
+prolific_pid,Prolific participant identifier,string,,Captured from PROLIFIC_PID query parameter; blank outside Prolific pilot
+prolific_study_id,Prolific study identifier,string,,Captured from STUDY_ID query parameter; blank outside Prolific pilot
+prolific_session_id,Prolific submission session identifier,string,,Captured from SESSION_ID query parameter; blank outside Prolific pilot

@@ -32,6 +32,17 @@ python -m http.server 8000
 
 Then open `http://localhost:8000`. When no Apps Script endpoint is configured, submission downloads a JSON test record instead of transmitting data.
 
+## Prolific presentation pilot
+
+The separate `prolific-pilot/` page fixes the scenario to the important work presentation (S3). The means (AI / human expert / alone) and perspective (self / other) randomisations remain unchanged, producing six conditions. The page starts without a separate consent screen and requires Prolific's `PROLIFIC_PID` query parameter. It also records `STUDY_ID` and `SESSION_ID` when Prolific supplies them.
+
+Before launch:
+
+1. Paste the current `google-apps-script/Code.gs` into the existing Apps Script project, run `upgradeSheet()`, and deploy a new web-app version. This adds the three Prolific columns to the same `responses` sheet without deleting existing data.
+2. Confirm that `prolificCompletionCode` in `prolific-pilot/app.js` matches the completion code created for the Prolific study (currently `CTT26OSA`).
+3. In Prolific, use the GitHub Pages URL ending in `/prolific-pilot/`. Prolific appends `PROLIFIC_PID`, `STUDY_ID`, and `SESSION_ID` to that URL.
+4. Test with `/prolific-pilot/?PROLIFIC_PID=TEST&STUDY_ID=TEST&SESSION_ID=TEST`, submit one response, check the Sheet row, and verify the return-to-Prolific button.
+
 ## Data and SPSS
 
 - One completed participant produces one row.

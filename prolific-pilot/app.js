@@ -1,0 +1,122 @@
+"use strict";
+
+const CONFIG = {
+  endpoint: "https://script.google.com/macros/s/AKfycbzzHNR1q8k9ug4JQ1RM3TjrhUF1mB7R7pQFxPVu60XTADpofWPDf3pDMU8hOCWEb8lv/exec",
+  studyVersion: "prolific-presentation-pilot-1.0",
+  saveDrafts: false,
+  prolificCompletionCode: "CTT26OSA"
+};
+
+const scenarios = {
+  S3:{task:"prepare the slides and talking points for an important work presentation",expert:"a professional presentation consultant"}
+};
+
+const universal = [
+  ["A01","This person is genuinely skilled at this kind of task.","I am genuinely skilled at this kind of task."],
+  ["A02","This person clearly knows what they are doing.","I clearly know what I am doing."],
+  ["A03","This person could produce work of this standard on their own.","I could produce work of this standard on my own."],
+  ["A04","This person is capable and effective.","I am capable and effective."],
+  ["A05_R","This person lacks the competence to handle this task properly.","I lack the competence to handle this task properly."],
+  ["B01","This person is willing to put in real work when it matters.","I am willing to put in real work when it matters."],
+  ["B02","This person is hard-working.","I am hard-working."],
+  ["B03","This person cares about doing things properly.","I care about doing things properly."],
+  ["B04","This person is motivated to do a good job.","I am motivated to do a good job."],
+  ["B05_R","This person is the type to cut corners.","I am the type to cut corners."],
+  ["C01","This person is sincere.","I am sincere."],
+  ["C02","This person is warm and genuine.","I am warm and genuine."],
+  ["C03","This person is someone of good character.","I am someone of good character."],
+  ["C04_R","This person comes across as cold or impersonal.","I come across as cold or impersonal."],
+  ["C05_R","This person treats this as a purely transactional matter.","I treat this as a purely transactional matter."],
+  ["D01","This person's expertise here is credible.","My expertise here is credible."],
+  ["D02","This person's work can be depended on.","My work can be depended on."],
+  ["D03","This person can be taken at their word here.","I can be taken at my word here."],
+  ["D04_R","The reliability of this person's work is questionable.","The reliability of my work is questionable."],
+  ["E01","The work this person produced is high quality.","The work I produced is high quality."],
+  ["E02","This person's result is impressive.","My result is impressive."],
+  ["E03","This person's work is technically well done.","My work is technically well done."],
+  ["E04_R","This person's final product falls short.","My final product falls short."],
+  ["F01","This work genuinely reflects who this person is.","This work genuinely reflects who I am."],
+  ["F02","This is really this person's own voice.","This is really my own voice."],
+  ["F03","What this person made feels authentic.","What I made feels authentic."],
+  ["F04_R","The result feels manufactured rather than real.","The result feels manufactured rather than real."],
+  ["G01","This person put real effort into this.","I put real effort into this."],
+  ["G02","Getting this done still demanded genuine effort from this person.","Getting this done still demanded genuine effort from me."],
+  ["G03","This person invested serious mental effort here.","I invested serious mental effort here."],
+  ["G04_R","This person took the easy way out.","I took the easy way out."],
+  ["G05_R","This person skipped the hard part.","I skipped the hard part."],
+  ["G06_R","This person was lazy about this.","I was lazy about this."],
+  ["H01","The way this person handled this is completely acceptable.","The way I handled this is completely acceptable."],
+  ["H02","This person did nothing wrong here.","I did nothing wrong here."],
+  ["H03_R","There is something dishonest about doing it this way.","There is something dishonest about doing it this way."],
+  ["H04_R","This amounts to a kind of cheating.","This amounts to a kind of cheating."],
+  ["H05_R","This approach is unfair to others who do it the hard way.","This approach is unfair to others who do it the hard way."]
+];
+
+const helpOnly = [
+  ["A06_R","Whatever ability is on display here really belongs to {help}, not to this person.","Whatever ability is on display here really belongs to {help}, not to me."],
+  ["I01","The credit for this belongs mostly to this person, not to {help}.","The credit for this belongs mostly to me, not to {help}."],
+  ["I02","This person, not {help}, is the real author of this.","I, not {help}, am the real author of this."],
+  ["I03","This person's own contribution here was substantial.","My own contribution here was substantial."],
+  ["I04_R","Most of what makes this good came from {help}.","Most of what makes this good came from {help}."],
+  ["I05_R","{Help} did the real work; this person mainly supervised.","{Help} did the real work; I mainly supervised."],
+  ["J01","{Help} gave this person a starting point that they then built on.","{Help} gave me a starting point that I then built on."],
+  ["J02","This person used {help} to sharpen their own thinking.","I used {help} to sharpen my own thinking."],
+  ["J03","{Help} served mainly as a source of inspiration for this person.","{Help} served mainly as a source of inspiration for me."],
+  ["J04","This person stayed in control and used {help} as support.","I stayed in control and used {help} as support."],
+  ["K01","This person handed the real work over to {help}.","I handed the real work over to {help}."],
+  ["K02","{Help} did the thinking and this person just collected the result.","{Help} did the thinking and I just collected the result."],
+  ["K03","This person used {help} to avoid doing the task themselves.","I used {help} to avoid doing the task myself."],
+  ["K04","This person let {help} replace their own effort.","I let {help} replace my own effort."]
+];
+
+const app = document.querySelector("#app");
+const progressLabel = document.querySelector("#progressLabel");
+const query = new URLSearchParams(window.location.search);
+let state = {participantId:crypto.randomUUID(),prolificPid:query.get("PROLIFIC_PID")||"",prolificStudyId:query.get("STUDY_ID")||"",prolificSessionId:query.get("SESSION_ID")||"",startedAt:null,condition:null,demographics:{},responses:{},timings:{},procedureOpenedAt:Date.now(),pageOpenedAt:null,activeTimingKey:null,page:0,sections:[]};
+
+function condition(){
+  const means=["AI","EXPERT","ALONE"], perspectives=["SELF","OTHER"];
+  return {scenario:"S3",means:means[Math.floor(Math.random()*3)],perspective:perspectives[Math.floor(Math.random()*2)]};
+}
+function saveLocal(){if(CONFIG.saveDrafts) localStorage.setItem("aiucc-draft",JSON.stringify(state));}
+function escapeHtml(v){return String(v).replace(/[&<>'"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[c]));}
+function beginPageTiming(key){state.activeTimingKey=key;state.pageOpenedAt=Date.now();}
+function endPageTiming(){if(state.activeTimingKey&&state.pageOpenedAt){state.timings[`time_${state.activeTimingKey}_sec`]=Number(((Date.now()-state.pageOpenedAt)/1000).toFixed(3));state.activeTimingKey=null;state.pageOpenedAt=null;}}
+function totalSteps(){return 4+(state.sections?.length||0);}
+function setProgress(current,total=totalSteps()){progressLabel.textContent=String(current).padStart(2,"0")+" / "+String(total).padStart(2,"0");}
+function renderIntro(){setProgress(0,4);beginPageTiming("consent");app.replaceChildren(document.querySelector("#introTemplate").content.cloneNode(true));const c=document.querySelector("#consentCheck"),b=document.querySelector("#startButton");c.onchange=()=>b.disabled=!c.checked;b.onclick=()=>{endPageTiming();state.startedAt=new Date().toISOString();state.condition=condition();state.sections=buildSections();state.page=1;saveLocal();renderDemographics();};}
+function renderDemographics(){setProgress(1);beginPageTiming("demographics");app.innerHTML=`<section class="panel"><p class="section-code">01 / Background</p><h1>First, a little about you.</h1><p class="instruction">Please answer the following questions. You may select “Prefer not to say” where available.</p><form id="demoForm" class="form-grid">
+  ${field("age","Age","number","",'min="18" max="100" step="1" required aria-describedby="ageHint"')}
+  ${select("gender","Gender",["Woman","Man","Other / Prefer not to say"],true)}
+  ${select("education","Highest level of education completed",["Primary or lower secondary","Upper secondary","Vocational qualification","Bachelor’s degree","Master’s degree","Doctoral degree","Other","Prefer not to say"],true)}
+  ${select("employment","Current employment status",["Employed full-time","Employed part-time","Self-employed","Student","Not currently employed","Retired","Other","Prefer not to say"],true)}
+  ${select("country","Country of residence",["United Kingdom","United States","Ireland","Australia","Other"],true)}
+  ${select("native_language","First language",["English","Other"],true)}
+  <div class="actions field full"><button type="submit" class="button primary">Continue <span>→</span></button></div></form></section>`;
+  const age=document.querySelector("#age");age.insertAdjacentHTML("afterend",'<span class="hint" id="ageHint">Enter a whole number from 18 to 100.</span>');age.addEventListener("input",()=>{age.setCustomValidity(age.validity.rangeUnderflow||age.validity.rangeOverflow||!Number.isInteger(Number(age.value))?"Please enter a whole number between 18 and 100.":"");});
+  document.querySelector("#demoForm").onsubmit=e=>{e.preventDefault();endPageTiming();state.demographics=Object.fromEntries(new FormData(e.target));state.page=2;saveLocal();renderVignette();};}
+function field(name,label,type,placeholder,extra=""){return `<div class="field"><label for="${name}">${label}</label><input id="${name}" name="${name}" type="${type}" placeholder="${placeholder}" ${extra}></div>`;}
+function select(name,label,options,required=false){return `<div class="field"><label for="${name}">${label}</label><select id="${name}" name="${name}" ${required?"required":""}><option value="">Select an option</option>${options.map(x=>`<option>${x}</option>`).join("")}</select></div>`;}
+function vignetteText(){const c=state.condition,s=scenarios[c.scenario],self=c.perspective==="SELF";const task=self?(s.selfTask||s.task.replaceAll("their","your").replaceAll("them","you")):s.task;let means;if(c.means==="AI")means="with the help of an AI tool (such as ChatGPT)";else if(c.means==="EXPERT")means=`with the help of ${self?(s.selfExpert||s.expert):s.expert}`;else means=self?"entirely on your own, without any help":"entirely on their own, without any help";return self?`Imagine that you need to ${task}. You complete it ${means}.`:`Imagine you observe someone — an ordinary person, much like you — who needs to ${task}. They complete it ${means}.`;}
+function renderVignette(){setProgress(2);beginPageTiming("vignette");app.innerHTML=`<section class="panel"><p class="section-code">02 / Situation</p><h1>Imagine the following situation in detail.</h1><div class="vignette deliberating">${escapeHtml(vignetteText())}</div><div class="deliberation-guide"><p class="instruction">For the next 30 seconds, form a vivid mental picture of the situation exactly as described. Imagine its context, how the task unfolds, and what the completed result would be like. Keep this specific situation in mind when answering the questions that follow.</p><div class="countdown" id="countdown" aria-live="polite">0:30</div></div><div class="actions"><button class="button primary" id="toItems" disabled>Continue in 30s <span>→</span></button></div></section>`;
+  const button=document.querySelector("#toItems"),counter=document.querySelector("#countdown"),frame=document.querySelector(".vignette");let remaining=30;
+  const timer=setInterval(()=>{remaining-=1;counter.textContent=`0:${String(remaining).padStart(2,"0")}`;button.firstChild.textContent=`Continue in ${remaining}s `;if(remaining<=0){clearInterval(timer);counter.textContent="READY";frame.classList.remove("deliberating");button.disabled=false;button.firstChild.textContent="Continue ";}},1000);
+  button.onclick=()=>{endPageTiming();state.page=3;saveLocal();renderSection(0);};}
+function helpLabel(cap=false){let h=state.condition.means==="AI"?"the AI":scenarios[state.condition.scenario].expert;return cap?h.charAt(0).toUpperCase()+h.slice(1):h;}
+function itemText(item){const raw=item[state.condition.perspective==="SELF"?2:1];return raw.replaceAll("{help}",helpLabel()).replaceAll("{Help}",helpLabel(true));}
+function scaleItem(item){return `<div class="question" data-item="${item[0]}"><p class="question-text">${escapeHtml(itemText(item))}</p><div class="scale" role="radiogroup" aria-label="Agreement scale">${[1,2,3,4,5,6,7].map(n=>`<label><input type="radio" name="${item[0]}" value="${n}" required><span>${n}</span></label>`).join("")}</div><div class="anchors"><span>Strongly disagree</span><span>Neither</span><span>Strongly agree</span></div></div>`;}
+function shuffle(items){const copy=[...items];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
+function buildSections(){const all=[...universal,...(state.condition.means==="ALONE"?[]:helpOnly)],letters=state.condition.means==="ALONE"?["A","B","C","D","E","F","G","H"]:["A","B","C","D","E","F","G","H","I","J","K"];return letters.map(letter=>({letter,itemIds:shuffle(all.filter(item=>item[0][0]===letter).map(item=>item[0]).concat(letter==="I"?["contribution"]:[]))}));}
+function renderSection(index){const section=state.sections[index],catalog=new Map([...universal,...helpOnly].map(item=>[item[0],item]));setProgress(3+index);beginPageTiming(`section_${section.letter.toLowerCase()}`);const questions=section.itemIds.map(id=>id==="contribution"?sliderItem():scaleItem(catalog.get(id))).join("");app.innerHTML=`<section class="study-layout panel"><aside class="scenario-rail"><p class="scenario-label">Keep this situation in mind</p><div class="vignette">${escapeHtml(vignetteText())}</div><p class="instruction">Base every response on this exact situation.</p></aside><div class="section-pane"><p class="section-code">Your assessment</p><h1>How do you see this situation?</h1><p class="instruction">Indicate how strongly you agree or disagree with each statement.</p><p class="section-position">SECTION ${String(index+1).padStart(2,"0")} / ${String(state.sections.length).padStart(2,"0")}</p><form id="itemsForm" class="item-list">${questions}<div id="formError"></div><div class="actions"><button type="submit" class="button primary">${index===state.sections.length-1?"Continue":"Next section"} <span>→</span></button></div></form></div></section>`;
+  const slider=document.querySelector("#contribution");if(slider)slider.oninput=()=>{slider.dataset.touched="true";document.querySelector("#sliderValue").value=slider.value;};
+  document.querySelector("#itemsForm").onsubmit=e=>{e.preventDefault();const missing=[...e.target.querySelectorAll(".question")].filter(q=>{const range=q.querySelector('input[type="range"]');return range?range.dataset.touched!=="true":!q.querySelector("input:checked");});if(missing.length){const needsSlider=missing.some(q=>q.querySelector('input[type="range"]'));document.querySelector("#formError").innerHTML=`<div class="error-summary">${needsSlider?"Please move the contribution slider to record your answer before continuing.":"Please answer every statement before continuing."}</div>`;missing[0].scrollIntoView({behavior:"smooth",block:"center"});return;}endPageTiming();Object.assign(state.responses,Object.fromEntries(new FormData(e.target)));saveLocal();if(index<state.sections.length-1){state.page=3+index+1;renderSection(index+1);window.scrollTo({top:0,behavior:"smooth"});}else{state.page=3+state.sections.length;renderFinal();}};}
+function sliderItem(){return `<div class="question"><p class="question-text">Of the total contribution to the final result, what share came from ${state.condition.perspective==="SELF"?"you":"the person"}, and what share came from ${escapeHtml(helpLabel())}?</p><div class="slider-wrap"><span>0</span><input id="contribution" name="contribution" type="range" min="0" max="100" value="50" data-touched="false" aria-describedby="contributionHint"><output id="sliderValue">—</output></div><div class="slider-ends"><span>None from ${state.condition.perspective==="SELF"?"you":"person"}</span><span>All from ${state.condition.perspective==="SELF"?"you":"person"}</span></div><p class="hint" id="contributionHint">Move the slider to record your answer, even if your answer is 50.</p></div>`;}
+function renderFinal(){setProgress(totalSteps()-1);beginPageTiming("final");app.innerHTML=`<section class="panel"><p class="section-code">Final questions</p><h1>Almost finished.</h1><form id="finalForm" class="form-grid">${select("ai_frequency","How often do you use generative AI tools such as ChatGPT?",["Never","Less than monthly","Monthly","Weekly","Several times a week","Daily or almost daily"],true)}${select("study_guess","What do you think this study was mainly about?",["Evaluations of work and the people who produce it","Memory for written information","Preferences for different kinds of tasks","I am not sure","Other"],true)}<div class="field full"><label for="comment">Optional comments</label><input id="comment" name="comment" type="text" maxlength="500"><span class="hint">Do not include your name or other identifying information.</span></div><div class="actions field full"><button type="submit" class="button primary">Submit responses <span>→</span></button></div></form></section>`;document.querySelector("#finalForm").onsubmit=async e=>{e.preventDefault();endPageTiming();state.timings.time_total_sec=Number(((Date.now()-state.procedureOpenedAt)/1000).toFixed(3));Object.assign(state.responses,Object.fromEntries(new FormData(e.target)));await submitData(e.target.querySelector("button"));};}
+async function submitData(button){button.disabled=true;button.textContent="Submitting…";const payload={participant_id:state.participantId,study_version:CONFIG.studyVersion,started_at:state.startedAt,completed_at:new Date().toISOString(),scenario:state.condition.scenario,means:state.condition.means,perspective:state.condition.perspective,...state.demographics,...state.responses,...state.timings,completed:1,prolific_pid:state.prolificPid,prolific_study_id:state.prolificStudyId,prolific_session_id:state.prolificSessionId};try{if(!CONFIG.endpoint){downloadFallback(payload);renderThanks(true);return;}const res=await fetch(CONFIG.endpoint,{method:"POST",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(payload)});if(!res.ok)throw new Error("Save failed");const out=await res.json();if(!out.ok)throw new Error(out.error||"Save failed");localStorage.removeItem("aiucc-draft");renderThanks(false);}catch(err){button.disabled=false;button.textContent="Try submitting again →";document.querySelector("#finalForm").insertAdjacentHTML("beforeend",`<div class="error-summary field full">We could not save your responses. Please check your connection and try again.</div>`);}}
+function downloadFallback(payload){const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"}),a=document.createElement("a");a.href=URL.createObjectURL(blob);a.download=`AI-UCC-${state.participantId}.json`;a.click();URL.revokeObjectURL(a.href);}
+function renderThanks(demo){setProgress(totalSteps());localStorage.removeItem("aiucc-draft");const configured=CONFIG.prolificCompletionCode!=="REPLACE_WITH_PROLIFIC_COMPLETION_CODE";const returnAction=!demo&&configured?`<div class="actions"><a class="button primary" href="https://app.prolific.com/submissions/complete?cc=${encodeURIComponent(CONFIG.prolificCompletionCode)}">Return to Prolific <span>→</span></a></div>`:`<p class="error-summary">${demo?"This was a local test, so no Prolific redirect is available.":"The Prolific completion code has not been configured. Please contact the researcher."}</p>`;app.innerHTML=`<section class="status-card panel"><div class="status-mark">✓</div><p class="section-code">Study complete</p><h1>Thank you for taking part.</h1><p class="lede">Your responses ${demo?"were downloaded as a local test file because data collection has not yet been connected":"have been recorded"}.</p><div class="rule"></div><h2>About this study</h2><div class="prose"><p>You were randomly shown a work presentation completed independently, with AI assistance, or with help from a human expert, from either a self or observer perspective.</p><p>The study investigates whether these conditions change judgments of the person, the resulting work, effort, authenticity, ownership, and moral acceptability. Comparing the conditions helps distinguish reactions specific to AI from reactions to receiving help more generally.</p><p>If you have questions about the study, please contact Maciej Koscielniak at SWPS University, Poland.</p></div>${returnAction}</section>`;}
+function startProlificStudy(){
+  if(!state.prolificPid){setProgress(0,0);app.innerHTML=`<section class="status-card panel"><p class="section-code">Cannot start study</p><h1>Missing Prolific participant ID.</h1><p class="lede">Please open this study using the link provided by Prolific.</p><p class="hint">For researcher testing, append <code>?PROLIFIC_PID=TEST</code> to the page address.</p></section>`;return;}
+  state.startedAt=new Date().toISOString();state.condition=condition();state.sections=buildSections();state.page=1;renderDemographics();
+}
+startProlificStudy();

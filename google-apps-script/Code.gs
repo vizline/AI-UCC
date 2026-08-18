@@ -17,7 +17,8 @@ const HEADERS = [
   'time_consent_sec','time_demographics_sec','time_vignette_sec',
   'time_section_a_sec','time_section_b_sec','time_section_c_sec','time_section_d_sec',
   'time_section_e_sec','time_section_f_sec','time_section_g_sec','time_section_h_sec',
-  'time_section_i_sec','time_section_j_sec','time_section_k_sec','time_final_sec','time_total_sec'
+  'time_section_i_sec','time_section_j_sec','time_section_k_sec','time_final_sec','time_total_sec',
+  'prolific_pid','prolific_study_id','prolific_session_id'
 ];
 
 /** Run once from the Apps Script editor before deploying the web app. */
@@ -56,7 +57,7 @@ function upgradeSheet() {
   sheet.getRange(2, existing.length + 1, Math.max(sheet.getMaxRows() - 1, 1), missing.length).setNumberFormat('0.000');
   if (sheet.getFilter()) sheet.getFilter().remove();
   sheet.getRange(1, 1, Math.max(sheet.getLastRow(), 1), HEADERS.length).createFilter();
-  return missing.length + ' timing columns added without altering existing responses.';
+  return missing.length + ' columns added without altering existing responses.';
 }
 
 function doGet() {
