@@ -36,6 +36,8 @@ Then open `http://localhost:8000`. When no Apps Script endpoint is configured, s
 
 The separate `prolific-pilot/` page fixes the scenario to the important work presentation (S3). The means (AI / human expert / alone) and perspective (self / other) randomisations remain unchanged, producing six conditions. The page starts without a separate consent screen and requires Prolific's `PROLIFIC_PID` query parameter. It also records `STUDY_ID` and `SESSION_ID` when Prolific supplies them.
 
+The participant-facing pilot is neutrally branded as the **Everyday Task Judgments Study**. General participant information suitable for the Prolific listing is available in `prolific-pilot/prolific-general-information.md`; it intentionally avoids revealing the experimental comparison before participation.
+
 Before launch:
 
 1. Paste the current `google-apps-script/Code.gs` into the existing Apps Script project, run `upgradeSheet()`, and deploy a new web-app version. This adds the three Prolific columns to the same `responses` sheet without deleting existing data.
