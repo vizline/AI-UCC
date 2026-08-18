@@ -1,7 +1,7 @@
 "use strict";
 
 const CONFIG={
-  endpoint:"",
+  endpoint:"https://script.google.com/macros/s/AKfycbzsKJFK_ztq0-jsoj8y2fWybK5zbNlB1pRhPgoW_ob-vQ7uSkei4OV2lhbbqhP0nHUC/exec",
   studyVersion:"short-pilot-1.0",
   prolificCompletionCode:"CTT26OSA"
 };
