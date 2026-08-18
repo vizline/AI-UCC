@@ -1,8 +1,7 @@
 .item-progress-meta{
   display:flex;
-  justify-content:space-between;
-  gap:16px;
-  margin-top:38px;
+  justify-content:flex-start;
+  margin-top:18px;
   color:var(--muted);
   font:400 11px/1.4 "Courier New",monospace;
   letter-spacing:.08em;
@@ -23,11 +22,24 @@
 }
 .item-carousel{
   min-height:310px;
-  margin-top:26px;
+  margin-top:0;
   border:1px solid var(--ink);
   display:flex;
   align-items:center;
   padding:clamp(28px,4vw,48px);
+}
+.section-pane h1,
+.scenario-heading{
+  max-width:none;
+  margin:0 0 26px;
+  font-size:clamp(25px,2.35vw,35px);
+  line-height:1.08;
+  letter-spacing:-.04em;
+  font-weight:500;
+  white-space:nowrap;
+}
+.scenario-rail .vignette{
+  margin-top:0;
 }
 .item-carousel .question{
   width:100%;
