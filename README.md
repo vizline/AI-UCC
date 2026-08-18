@@ -45,6 +45,10 @@ Before launch:
 3. In Prolific, use the GitHub Pages URL ending in `/prolific-pilot/`. Prolific appends `PROLIFIC_PID`, `STUDY_ID`, and `SESSION_ID` to that URL.
 4. Test with `/prolific-pilot/?PROLIFIC_PID=TEST&STUDY_ID=TEST&SESSION_ID=TEST`, submit one response, check the Sheet row, and verify the return-to-Prolific button.
 
+## Short 31-item pilot
+
+The independent `short-pilot/` study uses the S3 work-presentation scenario and retains the 2 (SELF / OTHER) × 3 (AI / EXPERT / ALONE) design. It presents one fully randomised eligible item battery, adds the creativity subscale, removes the contribution slider, and uses a dedicated Apps Script receiver and response workbook with calculated scale scores. See `short-pilot/README.md` before deployment; its endpoint must point to a completely separate Google Sheet.
+
 ## Data and SPSS
 
 - One completed participant produces one row.
