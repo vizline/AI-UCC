@@ -1,10 +1,26 @@
 # Short pilot setup
 
-This is an independent Prolific pilot for scenario S3 (work presentation), with a 2 (SELF / OTHER) × 3 (AI / EXPERT / ALONE) between-subjects design.
+This is an independent Prolific pilot for scenario S3 (work presentation). The currently active recruitment mode is **AI only**, with random assignment to SELF or OTHER perspective.
+
+## Condition-mode switch
+
+The URL, endpoint, and response schema stay unchanged. At the top of `app.js`, `CONFIG.conditionMode` selects the active condition pool:
+
+- `AI_ONLY` — AI assistance only, randomised SELF / OTHER (currently active).
+- `FULL_2X3` — restores AI / EXPERT / ALONE × SELF / OTHER.
+
+To restore the full design later, change only:
+
+```js
+conditionMode:"FULL_2X3"
+```
+
+Each response continues to store the selected `means`, `perspective`, and `study_version`; AI-only recruitment is tagged as `short-pilot-1.1-ai-only`.
 
 ## Questionnaire
 
-- Assisted conditions receive all 31 items.
+- AI-only participants receive all 31 items.
+- In the restored full design, all assisted conditions receive all 31 items.
 - In the ALONE condition, helper-specific J, K, and A4 items are structurally omitted; all other items remain.
 - The full eligible battery is randomised as one item pool for each participant.
 - Reverse-keyed raw responses are retained. The receiver calculates all scale scores and the higher-order person-directed penalty.
